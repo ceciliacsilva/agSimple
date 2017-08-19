@@ -1,5 +1,6 @@
 #lang racket
 
+;; Caso o tamanho da populacao inicial seja impar, nas proximas sera size-1
 
 (require plot)
 (plot-new-window? #t)
@@ -22,6 +23,13 @@
   (let ( (x (cromossomo->numero cromossomo ag)) )
     (g x) ))
 
+(define (find-min ag)
+  (let ( (popSize  (ag-parametros-size ag))
+         (maxInteracoes (ag-parametros-max ag))
+         (maxRepetido   (ag-parametros-maxRepeat ag)) )
+    (let ( (pop0 (populacao-inicial ag)) )
+      
+
 (define (populacao-inicial ag)
   (let ( (pop-size (ag-parametros-size ag))
          (numero-max (ag-parametros-numeroMax ag)) )
@@ -42,6 +50,51 @@
       (string-append (build-string toFill (lambda(i) #\0))
                      aux)  )) )
 
+
+(define (operacaoesGeneticas pop0 roleta ag)
+  (let* ( (pc (ag-parametros-pc ag))
+          (pm (ag-parametros-pm ag))
+          (cromossomoMax (ag-parametros-cromossomoMax ag))
+          (cromossomoSize (exact-round (/ (log cromossomoMax) (log 2)))) )
+    (let-values ( ((filho1 filho2) (crossover pop0 roleta cromossomoSize pc)) )
+      (list (cons (mutacao filho1 cromossomoSize pm) (fitness-eval filho1 ag))
+            (cons (mutacao filho2 cromossomoSize pm) (fitness-eval filho2 ag)))
+      )
+    ))
+
+(define (crossover pop0 roleta cromossomoSize pc)
+  (let* ( (individuo1 (list-ref pop0 (roleta-escolher roleta)))
+          (individuo2 (list-ref pop0 (roleta-escolher roleta)))
+          (pai (car individuo1))
+          (mae (car individuo2)) )
+    (let ( (cross? (random)) )
+      (cond ( (> cross? pc) (values pai mae) )
+            ( else
+              (let* ( (posicao (random cromossomoSize))
+                      (pai1    (substring pai 0 posicao))
+                      (pai2    (substring pai posicao))
+                      (mae1    (substring mae 0 posicao))
+                      (mae2    (substring mae posicao)) )
+                (let ( (filho1 (string-append pai1 mae2))
+                       (filho2 (string-append mae1 pai2)) )
+                  (values filho1 filho2) )  ))  )
+      ) ) )
+
+(define (mutacao cromossomo cromossomoSize pm)
+  (let ( (mutacao? (random)) )
+    (if (> mutacao? pm)
+        cromossomo
+        (let* ( (posicao (random cromossomoSize))
+                (cromossomoList (string->list cromossomo))
+                (geneMutacao    (list-ref cromossomoList posicao))
+                (newCromossomoL (list-set cromossomoList posicao (notGene geneMutacao))) )
+          (list->string newCromossomoL)
+          )  )
+    ))
+                                             
+(define (notGene gene)
+  (if (equal? gene #\0) #\1 #\0))
+      
 (define (roleta-criar pop0 ag)
   (let ( (fitness-total (apply + (map cdr pop0))) )
     (let-values ( ((soma roletaRev)
