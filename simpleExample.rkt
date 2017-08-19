@@ -27,8 +27,11 @@
   (let ( (popSize  (ag-parametros-size ag))
          (maxInteracoes (ag-parametros-max ag))
          (maxRepetido   (ag-parametros-maxRepeat ag)) )
-    (let ( (pop0 (populacao-inicial ag)) )
-      
+    (let* ( (pop0 (populacao-inicial ag))
+            (roleta (roleta-criar pop0 ag)) )
+      (for/fold ( (pop1 '()) )
+                ( (i (in-range (/ popSize 2))) )
+        (values (append pop1 (operacaoesGeneticas pop0 roleta ag))) ) )))
 
 (define (populacao-inicial ag)
   (let ( (pop-size (ag-parametros-size ag))
@@ -110,10 +113,10 @@
 
 (define (roleta-escolher roleta)
   (let ( (r (random)) )
-    (let ( (r< (lambda(x) (< x r))) )
+    (let ( (r< (lambda(x) (< r x))) )
       ;;(displayln r)
       ;;(displayln roleta)
-      (last (indexes-where roleta r<)) )) )
+      (first (indexes-where roleta r<)) )) )
 
 ;;convert
 (define (numero->cromossomo numero ag)
