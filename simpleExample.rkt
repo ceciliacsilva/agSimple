@@ -8,7 +8,7 @@
 (define-struct ag-parametros
   (size numeroMax cromossomoMax pc pm max maxRepeat))
 
-(define *ag* (make-ag-parametros 50 512 1024 0.6 0.01 100 10))
+(define *ag* (make-ag-parametros 50 512 1024 0.6 0.01 500 100))
 
 (define f
   (lambda(x)
@@ -27,11 +27,33 @@
   (let ( (popSize  (ag-parametros-size ag))
          (maxInteracoes (ag-parametros-max ag))
          (maxRepetido   (ag-parametros-maxRepeat ag)) )
-    (let* ( (pop0 (populacao-inicial ag))
-            (roleta (roleta-criar pop0 ag)) )
-      (for/fold ( (pop1 '()) )
-                ( (i (in-range (/ popSize 2))) )
-        (values (append pop1 (operacaoesGeneticas pop0 roleta ag))) ) )))
+    (let* ( (popInicial    (populacao-inicial ag))
+            (roletaInicial (roleta-criar popInicial ag)) )
+      (let loop ( (pop0   popInicial)
+                  (roleta roletaInicial)
+                  (best   '())
+                  (repeatBest  0)
+                  (repeat      0)
+                  (bestList '()) )
+        (let ( (pop1
+                (for/fold ( (pop1 '()) )
+                          ( (i (in-range (/ popSize 2))) )
+                  (values (append pop1 (operacaoesGeneticas pop0 roleta ag))) ))  )
+          (let ( (bestPop (first (sort pop1 #:key cdr >))) )
+            (if (or (= repeat maxInteracoes) (= repeatBest maxRepetido))
+                (begin
+                  (displayln bestList)
+                  best)
+                (loop pop1
+                      (roleta-criar pop1 ag)
+                      bestPop
+                      (if (equal? best bestPop) (add1 repeatBest) 0)
+                      (add1 repeat)
+                      (cons bestPop bestList))  )
+            )
+          )
+        ))
+    ))
 
 (define (populacao-inicial ag)
   (let ( (pop-size (ag-parametros-size ag))
