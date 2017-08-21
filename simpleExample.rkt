@@ -2,6 +2,10 @@
 
 ;; Caso o tamanho da populacao inicial seja impar, nas proximas sera size-1
 
+;;USE:
+;;> (find-min "simul3" *ag*)
+
+
 (require plot)
 (plot-new-window? #t)
 
