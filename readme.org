@@ -34,8 +34,7 @@ x para f(x) mínimo: 421 valor: 418.9827640161443
 '("1101001010" . 418.9827640161443)
 #+END_SRC
 
-[[file:~/Imagens/ag-fgs3.png]]
+[[file:imagens/ag-fgs3.png]]
 
-
-
+Vídeo com a evolução da população: https://github.com/ceciliacsilva/agSimple/blob/master/simul3/output.mp4
 
