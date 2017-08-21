@@ -1,0 +1,41 @@
+#+TITLE: Trabalho 02 - Ag simple
+#+AUTHOR: Cecília Carneiro e Silva
+#+DATE: 23/08/2017
+#+OPTIONS: toc:nil 
+#+LATEX_HEADER: \usepackage[margin=3cm]{geometry}
+
+* Ag - Simple Example
+
+  Implementação de um exemplo de Algoritmo Genético. Seguindo a seção 3 do artigo do Tomassini. A linguagem utilizada foi Racket Language. Repositório da aplicação: https://github.com/ceciliacsilva/agSimple.
+  Minimização da função f(x), deseja-se encontrar o valor de x para f(x) mínimo.
+
+** Considerações
+
+- Avaliação dos indivíduos: baseada na função de aptidão (fitness), indica a qualidade do indivíduo na população.
+- Para o resultado da função aptidão ser positivo, sendo f(x) negativa para todo x, criou-se g(x) = - f(x).
+- Na verdade, foi encontrado o valor máximo da função.
+- Critérios de parada: número máximo de gerações, repetição do melhor indivíduo por n gerações.
+
+** Parametros do AG
+
+- pc: 0,6 (artigo)
+- pm: 0,01 (artigo)
+- tamanho da população: 50 (artigo)
+- x máximo: 512 (artigo)
+- cromossomo máximo: 1024 (artigo)
+- número máximo de gerações: 200
+- repetição máxima do melhor indivíduo: 5
+
+** Resultados
+
+#+BEGIN_SRC scheme
+> (find-min "simul3" *ag*)
+x para f(x) mínimo: 421 valor: 418.9827640161443
+'("1101001010" . 418.9827640161443)
+#+END_SRC
+
+[[file:~/Imagens/ag-fgs3.png]]
+
+
+
+
