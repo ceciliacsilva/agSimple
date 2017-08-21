@@ -8,7 +8,8 @@
 (define-struct ag-parametros
   (size numeroMax cromossomoMax pc pm max maxRepeat))
 
-(define *ag* (make-ag-parametros 50 512 1024 0.6 0.01 500 100))
+(define *ag* (make-ag-parametros 50 512 1024 0.6 0.01 200 10))
+(define *c* 430)
 
 (define f
   (lambda(x)
@@ -23,26 +24,32 @@
   (let ( (x (cromossomo->numero cromossomo ag)) )
     (g x) ))
 
-(define (find-min ag)
+(define (find-min simulacaoNome ag)
+  (make-directory* simulacaoNome)
   (let ( (popSize  (ag-parametros-size ag))
          (maxInteracoes (ag-parametros-max ag))
          (maxRepetido   (ag-parametros-maxRepeat ag)) )
     (let* ( (popInicial    (populacao-inicial ag))
             (roletaInicial (roleta-criar popInicial ag)) )
+      (plot-populacao popInicial (string-append simulacaoNome "/geracao0.png") ag)
       (let loop ( (pop0   popInicial)
                   (roleta roletaInicial)
                   (best   '())
                   (repeatBest  0)
-                  (repeat      0)
+                  (repeat      1)
                   (bestList '()) )
         (let ( (pop1
                 (for/fold ( (pop1 '()) )
                           ( (i (in-range (/ popSize 2))) )
                   (values (append pop1 (operacaoesGeneticas pop0 roleta ag))) ))  )
           (let ( (bestPop (first (sort pop1 #:key cdr >))) )
+            (plot-populacao pop1 (string-append simulacaoNome "/geracao" (number->string repeat) ".png") ag)
             (if (or (= repeat maxInteracoes) (= repeatBest maxRepetido))
                 (begin
-                  (displayln bestList)
+                  (plot-best g best "g" ag)
+                  (plot-best f (cons (car best) (- (cdr best))) "f" ag #t)
+                  (script-video simulacaoNome)
+                  (displayln (~a "x para f(x) mínimo: " (cromossomo->numero (car best) ag) " valor: " (cdr best)))
                   best)
                 (loop pop1
                       (roleta-criar pop1 ag)
@@ -54,6 +61,33 @@
           )
         ))
     ))
+
+(define (plot-best funcao ponto namePlot ag [negativo? #f])
+  (let ( (numero-max (ag-parametros-numeroMax ag)) )
+    (plot
+     (list
+      (function funcao 0 numero-max #:label namePlot)
+      (point-label (list (cromossomo->numero (car ponto) ag) (cdr ponto))) )
+      #:x-min 0 #:x-max numero-max #:y-min 0 #:y-max (if negativo? (- *c*) *c*)
+      )) )
+
+(define (script-video simulacaoNome)
+  (let ( (command "ffmpeg -framerate 4 -i geracao%000d.png -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p output.mp4") )
+    (call-with-output-file (string-append simulacaoNome "/toVideo.sh") #:exists 'replace
+      (lambda(p)
+        (displayln command p)) )) )
+
+(define (plot-populacao pop fileOutput ag)
+  (let ( (numero-max (ag-parametros-numeroMax ag)) )
+    (plot-file
+     (points (for/list ( (individuo (in-list pop)) )
+               (list (cromossomo->numero (car individuo) ag) (cdr individuo)) )
+             #:alpha 0.6
+             #:sym 'fullcircle1
+             #:color "blue"
+             #:label fileOutput)
+     #:x-min 0 #:x-max numero-max #:y-min 0 #:y-max *c*
+   fileOutput )  ))
 
 (define (populacao-inicial ag)
   (let ( (pop-size (ag-parametros-size ag))
