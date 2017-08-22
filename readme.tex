@@ -1,4 +1,4 @@
-% Created 2017-08-22 Ter 19:58
+% Created 2017-08-22 Ter 20:21
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -44,8 +44,17 @@ Minimização da função f(x), deseja-se encontrar o valor de x para f(x) míni
 \item Critérios de parada: número máximo de gerações, repetição do melhor indivíduo por n gerações.
 \end{itemize}
 
-\subsection{Parametros do AG}
+\subsection{Estruturação}
 \label{sec-1-2}
+
+\begin{itemize}
+\item Cromossomo = string, "0011011001"
+\item Indivíduo = pair, '(cromossomo . fitness)
+\item População = list, '((cromossomo1 . fitness1) (cromossomo2 . fitness2) \ldots{})
+\end{itemize}
+
+\subsection{Parametros do AG}
+\label{sec-1-3}
 
 \begin{itemize}
 \item pc: 0,6 (artigo)
@@ -58,7 +67,7 @@ Minimização da função f(x), deseja-se encontrar o valor de x para f(x) míni
 \end{itemize}
 
 \subsection{Resultados}
-\label{sec-1-3}
+\label{sec-1-4}
 
 \begin{verbatim}
 > ;;(find-min <nome_simulacao> <parametros-ag>)
@@ -67,10 +76,39 @@ x para f(x) mínimo: 421 valor: 418.9827640161443
 '("1101001010" . 418.9827640161443)
 \end{verbatim}
 
+Gráficos exibidos ao fim da execução:
+
 \includegraphics[width=.9\linewidth]{imagens/ag-fgs3.png}
 
 Vídeo com a evolução da população: \url{https://github.com/ceciliacsilva/agSimple/blob/master/simul3/output.mp4}
 
-OBS: para gerar o vídeo é necessário entrar o diretório <nome$_{\text{simulacao}}$> e executar o script "toVideo.sh".
+\begin{itemize}
+\item OBS: para gerar o vídeo é necessário entrar o diretório <nome$_{\text{simulacao}}$> e executar o script "toVideo.sh".
+\end{itemize}
+
+\begin{verbatim}
+$ cd <nome_simulacao>
+$ sh toVideo.sh
+\end{verbatim}
+
+\subsubsection{Outros testes}
+\label{sec-1-4-1}
+
+\begin{itemize}
+\item simul4: 
+\begin{itemize}
+\item cromossomo máximo: 2048
+\end{itemize}
+
+\item simul5:
+\begin{itemize}
+\item repetição máxima do melhor indivíduo: 20
+\end{itemize}
+
+\item simul6: 
+\begin{itemize}
+\item x máximo: 256
+\end{itemize}
+\end{itemize}
 % Emacs 25.1.1 (Org mode 8.2.10)
 \end{document}
