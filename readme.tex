@@ -1,4 +1,4 @@
-% Created 2017-08-21 Seg 20:38
+% Created 2017-08-22 Ter 19:58
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -61,6 +61,7 @@ Minimização da função f(x), deseja-se encontrar o valor de x para f(x) míni
 \label{sec-1-3}
 
 \begin{verbatim}
+> ;;(find-min <nome_simulacao> <parametros-ag>)
 > (find-min "simul3" *ag*)
 x para f(x) mínimo: 421 valor: 418.9827640161443
 '("1101001010" . 418.9827640161443)
@@ -69,5 +70,7 @@ x para f(x) mínimo: 421 valor: 418.9827640161443
 \includegraphics[width=.9\linewidth]{imagens/ag-fgs3.png}
 
 Vídeo com a evolução da população: \url{https://github.com/ceciliacsilva/agSimple/blob/master/simul3/output.mp4}
+
+OBS: para gerar o vídeo é necessário entrar o diretório <nome$_{\text{simulacao}}$> e executar o script "toVideo.sh".
 % Emacs 25.1.1 (Org mode 8.2.10)
 \end{document}

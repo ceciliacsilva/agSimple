@@ -16,6 +16,12 @@
 - Na verdade, foi encontrado o valor máximo da função.
 - Critérios de parada: número máximo de gerações, repetição do melhor indivíduo por n gerações.
 
+** Estruturação
+
+- Cromossomo = string, "0011011001"
+- Indivíduo = pair, '(cromossomo . fitness)
+- População = list, '((cromossomo1 . fitness1) (cromossomo2 . fitness2) ...)
+
 ** Parametros do AG
 
 - pc: 0,6 (artigo)
@@ -29,12 +35,34 @@
 ** Resultados
 
 #+BEGIN_SRC scheme
+> ;;(find-min <nome_simulacao> <parametros-ag>)
 > (find-min "simul3" *ag*)
 x para f(x) mínimo: 421 valor: 418.9827640161443
 '("1101001010" . 418.9827640161443)
 #+END_SRC
 
+   Gráficos exibidos ao fim da execução:
+
 [[file:imagens/ag-fgs3.png]]
 
 Vídeo com a evolução da população: https://github.com/ceciliacsilva/agSimple/blob/master/simul3/output.mp4
+
+- OBS: para gerar o vídeo é necessário entrar o diretório <nome_simulacao> e executar o script "toVideo.sh".
+
+#+BEGIN_SRC
+$ cd <nome_simulacao>
+$ sh toVideo.sh
+#+END_SRC
+
+*** Outros testes
+
+- simul4: 
+  - cromossomo máximo: 2048
+
+- simul5:
+  - repetição máxima do melhor indivíduo: 20
+
+- simul6: 
+  - x máximo: 256
+
 
