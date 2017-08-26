@@ -95,9 +95,10 @@
 
 (define (populacao-inicial ag)
   (let ( (pop-size (ag-parametros-size ag))
-         (numero-max (ag-parametros-numeroMax ag)) )
+         (numero-max (ag-parametros-numeroMax ag))
+         (cromossomo-max (ag-parametros-cromossomoMax ag)) )
     (for/list ( (i (in-range pop-size)) )
-      (let* ( (numero     (random numero-max))
+      (let* ( (numero     (random cromossomo-max))
               (aux        (numero->cromossomo numero ag))
               (cromossomo (cromossomo-fill aux ag))
               (fitness    (fitness-eval cromossomo ag)) )
@@ -180,7 +181,7 @@
 
 ;;convert
 (define (numero->cromossomo numero ag)
-  (number->string (normalize numero ag) 2))
+  (number->string numero 2))
 
 (define (cromossomo->numero cromossomo ag)
   (normalize (string->number cromossomo 2) ag #f))
